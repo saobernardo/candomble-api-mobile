@@ -97,7 +97,7 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - webserver:/var/www/html
+      - candomble_webserver:/var/www/html
       - ./nginx/conf.d:/etc/nginx/conf.d
     networks:
       - candomble_network
@@ -157,6 +157,12 @@ volumes:
   candomble_cluster_1:
     driver: local
   candomble_cluster_2:
+    driver: local
+  candomble_cluster_3:
+    driver: local
+  candomble_cluster_4:
+    driver: local
+  candomble_cluster_5:
     driver: local
   candomble_redis_insight:
     driver: local
