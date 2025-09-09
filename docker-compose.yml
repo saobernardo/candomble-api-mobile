@@ -1,0 +1,164 @@
+services:
+  redis:
+    image: redis:7.4.2
+    networks:
+      - candomble_network
+    volumes:
+      - candomble_redis:/data
+    ports:
+      - 127.0.0.1:6379:6379
+
+  redis-cluster-0:
+    image: docker.io/bitnami/redis-cluster:7.4.2
+    networks:
+      - candomble_network
+    volumes:
+      - candomble_cluster_0:/bitnami/redis/data
+    environment:
+      REDIS_PASSWORD: alcidessonso
+      REDIS_NODES: redis-cluster-0 redis-cluster-1 redis-cluster-2 redis-cluster-3 redis-cluster-4 redis-cluster-5
+
+  redis-cluster-1:
+    image: docker.io/bitnami/redis-cluster:7.4.2
+    networks:
+      - candomble_network
+    volumes:
+      - candomble_cluster_1:/bitnami/redis/data
+    environment:
+      REDIS_PASSWORD: alcidessonso
+      REDIS_NODES: redis-cluster-0 redis-cluster-1 redis-cluster-2 redis-cluster-3 redis-cluster-4 redis-cluster-5
+
+  redis-cluster-2:
+    image: docker.io/bitnami/redis-cluster:7.4.2
+    networks:
+      - candomble_network
+    volumes:
+      - candomble_cluster_2:/bitnami/redis/data
+    environment:
+      REDIS_PASSWORD: alcidessonso
+      REDIS_NODES: redis-cluster-0 redis-cluster-1 redis-cluster-2 redis-cluster-3 redis-cluster-4 redis-cluster-5
+
+  redis-cluster-3:
+    image: docker.io/bitnami/redis-cluster:7.4.2
+    networks:
+      - candomble_network
+    volumes:
+      - candomble_cluster_3:/bitnami/redis/data
+    environment:
+      REDIS_PASSWORD: alcidessonso
+      REDIS_NODES: redis-cluster-0 redis-cluster-1 redis-cluster-2 redis-cluster-3 redis-cluster-4 redis-cluster-5
+
+  redis-cluster-4:
+    image: docker.io/bitnami/redis-cluster:7.4.2
+    networks:
+      - candomble_network
+    volumes:
+      - candomble_cluster_4:/bitnami/redis/data
+    environment:
+      REDIS_PASSWORD: alcidessonso
+      REDIS_NODES: redis-cluster-0 redis-cluster-1 redis-cluster-2 redis-cluster-3 redis-cluster-4 redis-cluster-5
+
+  redis-cluster-5:
+    image: docker.io/bitnami/redis-cluster:7.4.2
+    networks:
+      - candomble_network
+    volumes:
+      - candomble_cluster_2:/bitnami/redis/data
+    depends_on:
+      - redis-cluster-0
+      - redis-cluster-1
+      - redis-cluster-2
+      - redis-cluster-3
+      - redis-cluster-4
+    environment:
+      REDIS_CLUSTER_CREATOR: 'yes'
+      REDIS_CLUSTER_REPLICAS: '1'
+      REDIS_NODES: redis-cluster-0 redis-cluster-1 redis-cluster-2
+      REDIS_PASSWORD: odjAwVDLcyS2GCyteXcenaoqR8wkLD4HFsySWrgaby7VIG
+      REDISCLI_AUTH: cabelin
+
+  redisinsight:
+    image: redis/redisinsight:2.54
+    networks:
+      - candomble_network
+    volumes:
+      - candomble_redis_insight:/root/.redisinsight
+    ports:
+      - "127.0.0.1:5540:5540"
+    depends_on:
+      - redis-cluster-0
+      - redis-cluster-1
+      - redis-cluster-2
+
+  webserver:
+    image: nginx:alpine
+    container_name: nginx_core
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - webserver:/var/www/html
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - candomble_network
+
+  candomble:
+    build:
+      context: .
+      tags:
+        - candomble-user:development
+    volumes:
+      - ./app:/var/www/html/app:ro
+      - ./bootstrap/app.php:/var/www/html/bootstrap/app.php:ro
+      - ./config:/var/www/html/config:ro
+      - ./database:/var/www/html/database:rw
+      - ./public:/var/www/html/public:ro
+      - ./resources:/var/www/html/resources:ro
+      - ./routes:/var/www/html/routes:ro
+      - ./storage:/var/www/html/storage:rw
+    networks:
+      - candomble_network
+    working_dir: /var/www/html
+    environment:
+      DEVELOPER_UID_OVERRIDE: '${DEVELOPER_UID_OVERRIDE}'
+      DEVELOPER_GID_OVERRIDE: '${DEVELOPER_GID_OVERRIDE}'
+    env_file:
+      - .env
+
+  mysql:
+    image: mysql:9.2.0
+    container_name: mysql
+    networks:
+      - candomble_network
+    ports:
+      - 127.0.0.1:3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: '1'
+    volumes:
+      - candomble_mysql:/var/lib/mysql
+
+networks:
+  candomble_network:
+    name: candomble
+  
+volumes:
+  user:
+    driver: local
+  candomble_redis:
+    driver: local
+  candomble_mysql:
+    driver: local
+  candomble_cluster_0:
+    driver: local
+  candomble_cluster_1:
+    driver: local
+  candomble_cluster_2:
+    driver: local
+  candomble_redis_insight:
+    driver: local
+  candomble_webserver:
+    driver: local
