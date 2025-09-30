@@ -2,4 +2,11 @@
 
 namespace App\Http\Controllers;
 
-class UserController {}
+use App\Services\User\CreateUserService;
+
+class UserController
+{
+    public function __construct(
+        protected CreateUserService $createUserService
+    ) {}
+}
