@@ -10,7 +10,7 @@ if [ ! -d "vendor" ]; then
   docker run \
     --user $curr_uid:$curr_gid \
     --mount type=bind,source="$curr_dir",target="/app" \
-    composer:lts composer install --ignore-platform-req=ext-pcntl --ignore-platform-req=ext-gmp
+    composer:2.10.1 composer install --ignore-platform-req=ext-pcntl --ignore-platform-req=ext-gmp
 fi
 
 export DEVELOPER_UID_OVERRIDE=$curr_uid

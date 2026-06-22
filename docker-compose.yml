@@ -1,81 +1,12 @@
 services:
   redis:
-    image: redis:7.4.2
+    image: redis:8.2.1
     networks:
       - candomble_network
     volumes:
       - candomble_redis:/data
     ports:
       - 127.0.0.1:6379:6379
-
-  redis-cluster-0:
-    image: docker.io/bitnami/redis-cluster:7.4.2
-    networks:
-      - candomble_network
-    volumes:
-      - candomble_cluster_0:/bitnami/redis/data
-    environment:
-      REDIS_PASSWORD: alcidessonso
-      REDIS_NODES: redis-cluster-0 redis-cluster-1 redis-cluster-2 redis-cluster-3 redis-cluster-4 redis-cluster-5
-
-  redis-cluster-1:
-    image: docker.io/bitnami/redis-cluster:7.4.2
-    networks:
-      - candomble_network
-    volumes:
-      - candomble_cluster_1:/bitnami/redis/data
-    environment:
-      REDIS_PASSWORD: alcidessonso
-      REDIS_NODES: redis-cluster-0 redis-cluster-1 redis-cluster-2 redis-cluster-3 redis-cluster-4 redis-cluster-5
-
-  redis-cluster-2:
-    image: docker.io/bitnami/redis-cluster:7.4.2
-    networks:
-      - candomble_network
-    volumes:
-      - candomble_cluster_2:/bitnami/redis/data
-    environment:
-      REDIS_PASSWORD: alcidessonso
-      REDIS_NODES: redis-cluster-0 redis-cluster-1 redis-cluster-2 redis-cluster-3 redis-cluster-4 redis-cluster-5
-
-  redis-cluster-3:
-    image: docker.io/bitnami/redis-cluster:7.4.2
-    networks:
-      - candomble_network
-    volumes:
-      - candomble_cluster_3:/bitnami/redis/data
-    environment:
-      REDIS_PASSWORD: alcidessonso
-      REDIS_NODES: redis-cluster-0 redis-cluster-1 redis-cluster-2 redis-cluster-3 redis-cluster-4 redis-cluster-5
-
-  redis-cluster-4:
-    image: docker.io/bitnami/redis-cluster:7.4.2
-    networks:
-      - candomble_network
-    volumes:
-      - candomble_cluster_4:/bitnami/redis/data
-    environment:
-      REDIS_PASSWORD: alcidessonso
-      REDIS_NODES: redis-cluster-0 redis-cluster-1 redis-cluster-2 redis-cluster-3 redis-cluster-4 redis-cluster-5
-
-  redis-cluster-5:
-    image: docker.io/bitnami/redis-cluster:7.4.2
-    networks:
-      - candomble_network
-    volumes:
-      - candomble_cluster_2:/bitnami/redis/data
-    depends_on:
-      - redis-cluster-0
-      - redis-cluster-1
-      - redis-cluster-2
-      - redis-cluster-3
-      - redis-cluster-4
-    environment:
-      REDIS_CLUSTER_CREATOR: 'yes'
-      REDIS_CLUSTER_REPLICAS: '1'
-      REDIS_NODES: redis-cluster-0 redis-cluster-1 redis-cluster-2
-      REDIS_PASSWORD: odjAwVDLcyS2GCyteXcenaoqR8wkLD4HFsySWrgaby7VIG
-      REDISCLI_AUTH: cabelin
 
   redisinsight:
     image: redis/redisinsight:2.54
@@ -85,10 +16,6 @@ services:
       - candomble_redis_insight:/root/.redisinsight
     ports:
       - "127.0.0.1:5540:5540"
-    depends_on:
-      - redis-cluster-0
-      - redis-cluster-1
-      - redis-cluster-2
 
   webserver:
     image: nginx:alpine
@@ -106,7 +33,7 @@ services:
     build:
       context: .
       tags:
-        - candomble-user:development
+        - candomble-core:development
     volumes:
       - ./app:/var/www/html/app:ro
       - ./bootstrap/app.php:/var/www/html/bootstrap/app.php:ro
@@ -151,18 +78,6 @@ volumes:
   candomble_redis:
     driver: local
   candomble_mysql:
-    driver: local
-  candomble_cluster_0:
-    driver: local
-  candomble_cluster_1:
-    driver: local
-  candomble_cluster_2:
-    driver: local
-  candomble_cluster_3:
-    driver: local
-  candomble_cluster_4:
-    driver: local
-  candomble_cluster_5:
     driver: local
   candomble_redis_insight:
     driver: local

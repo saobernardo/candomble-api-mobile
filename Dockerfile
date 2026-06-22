@@ -1,4 +1,4 @@
-FROM composer:lts
+FROM composer:2.10.1
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpng-dev \
