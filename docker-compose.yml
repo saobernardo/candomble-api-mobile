@@ -19,7 +19,7 @@ services:
 
   webserver:
     image: nginx:alpine
-    container_name: nginx_core
+    container_name: nginx_candomble
     restart: unless-stopped
     ports:
       - "8000:80"
@@ -54,7 +54,7 @@ services:
 
   mysql:
     image: mysql:9.2.0
-    container_name: mysql
+    container_name: candomble_mysql
     networks:
       - candomble_network
     ports:
