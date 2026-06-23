@@ -20,7 +20,7 @@ class Controller extends BaseController
      */
     public function ping(): JsonResponse
     {
-        return response()->json()->v1(
+        return response()->json()->default(
             code: 'S001',
             message: 'success',
             userMessage: 'sucesso',
