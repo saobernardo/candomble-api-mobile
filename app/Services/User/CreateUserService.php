@@ -124,6 +124,7 @@ class CreateUserService
         $user->cpf = $dto->cpf;
         $user->rg = $dto->rg;
         $user->password = $this->passwordService->hash($dto->password);
+        $user->activated = true;
         $user->save();
 
         return $user;

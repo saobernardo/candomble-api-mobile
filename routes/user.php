@@ -7,4 +7,5 @@ Route::group([
     'prefix' => 'auth',
 ], function () {
     Route::post('create', [UserController::class, 'create']);
+    Route::post('login', [UserController::class, 'login']);
 });
