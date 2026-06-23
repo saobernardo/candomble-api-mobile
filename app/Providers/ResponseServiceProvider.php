@@ -22,7 +22,7 @@ class ResponseServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        JsonResponse::macro('v1', function (
+        JsonResponse::macro('default', function (
             string $code,
             string $message,
             ?string $userMessage,

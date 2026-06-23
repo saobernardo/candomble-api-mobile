@@ -14,8 +14,7 @@ use Illuminate\Support\Facades\Route;
  */
 class RouteServiceProvider extends ServiceProvider
 {
-    protected string $apiNamespace = 'App\Http\Controllers';
-
+    protected const API_NAMESPACE = 'App\Http\Controllers';
     public const HOME = '/home';
 
     /**
@@ -30,9 +29,8 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            Route::middleware('api')
-                ->namespace($this->apiNamespace)
-                ->prefix('api/user')
+            Route::namespace(self::API_NAMESPACE)
+                ->prefix('user')
                 ->group(base_path('routes/user.php'));
         });
     }
