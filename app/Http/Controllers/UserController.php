@@ -5,10 +5,15 @@ namespace App\Http\Controllers;
 use App\DTO\User\CreateUserDTO;
 use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Requests\User\LoginRequest;
+use App\Http\Requests\User\PasswordChangeRequest;
+use App\Http\Requests\User\PasswordRecoveryRequest;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\ValidatePasswordRecoveryResource;
 use App\Services\User\CreateUserService;
 use App\Services\User\LoginService;
+use App\Services\User\PasswordRecoveryService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class UserController
 {
@@ -17,10 +22,12 @@ class UserController
      *
      * @param  CreateUserService  $createUserService
      * @param  LoginService  $loginService
+     * @param  PasswordRecoveryService  $passwordRecoveryService
      */
     public function __construct(
         protected CreateUserService $createUserService,
-        protected LoginService $loginService
+        protected LoginService $loginService,
+        protected PasswordRecoveryService $passwordRecoveryService
     ) {}
 
     /**
@@ -100,4 +107,104 @@ class UserController
             data: ['jwtToken' => $response],
         );
     }
+
+    /**
+     * Password Recovery Request
+     *
+     * The first step to user password recovery.
+     *
+     * @responseFile 200 resources/docs/responses/user/auth/passwordRecoveryRequest200.json scenario="200 - S001"
+     *
+     * @responseField code string The status code of the response.
+     * @responseField message string A message providing additional details.
+     * @responseField userMessage string A message intended for end-users.
+     * @responseField data object|null This routes doesn't have any data.
+     *
+     * @param  PasswordRecoveryRequest  $request
+     *
+     * @return JsonResponse JSON response with user activation result.
+     */
+    public function passwordRecoveryRequest(PasswordRecoveryRequest $request): JsonResponse
+    {
+        $this->passwordRecoveryService->requestPasswordChange($request->validated('email'));
+
+        return response()->json()->default(
+            code: 'S001',
+            message: 'success',
+            userMessage: 'sucesso',
+            data: null,
+            status: 201
+        );
+    }
+
+    /**
+     * Validate Password Recovery
+     *
+     * The second step to user password recovery
+     *
+     * @responseFile 200 resources/docs/responses/user/auth/validatePasswordRecovery200.json scenario="200 - S001"
+     * @responseFile 404 resources/docs/responses/user/auth/validatePasswordRecovery404-C019.json scenario="404 - C019"
+     *
+     * @responseField code string The status code of the response.
+     * @responseField message string A message providing additional details.
+     * @responseField userMessage string A message intended for end-users.
+     * @responseField data object|null The route data response
+     *
+     * @respondeField data.email string The user's email
+     *
+     * @responseField data.token string The recovery password request token.
+     *
+     * @param  PasswordRecoveryRequest  $request
+     * @param  string  $token
+     * @param  string  $encodedEmail
+     *
+     * @return JsonResponse JSON response with relevant data.
+     */
+    // public function validatePasswordRecovery(Request $request, string $token, string $encodedEmail): JsonResponse
+    // {
+    //     $resetRequest = $this->getPasswordResetRequestService->get($encodedEmail, $token);
+
+    //     return response()->json()->default(
+    //         code: 'S001',
+    //         message: 'success',
+    //         userMessage: 'sucesso',
+    //         data: new ValidatePasswordRecoveryResource($resetRequest),
+    //     );
+    // }
+
+    /**
+     * Password Change
+     *
+     * The third step to user password recovery
+     *
+     * @responseFile 200 resources/docs/responses/user/auth/passwordChange200.json scenario="200 - S001"
+     * @responseFile 404 resources/docs/responses/user/auth/passwordChange404-C046.json scenario="404 - C046"
+     * @responseFile 500 resources/docs/responses/user/auth/passwordChange500-C049.json scenario="500 - C049"
+     * @responseFile 500 resources/docs/responses/user/auth/passwordchange500-C050.json scenario="500 - C050"
+     *
+     * @responseField code string The status code of the response.
+     * @responseField message string A message providing additional details.
+     * @responseField userMessage string A message intended for end-users.
+     * @responseField data object|null This routes doesn't have any data.
+     *
+     * @param  PasswordChangeRequest  $request
+     *
+     * @return JsonResponse JSON response with relevant data.
+     */
+    // public function passwordChange(PasswordChangeRequest $request): JsonResponse
+    // {
+    //     $this->passwordChangeService->change(
+    //         $request->validated('id'),
+    //         $request->validated('userId'),
+    //         $request->validated('newPassword')
+    //     );
+
+    //     return response()->json()->default(
+    //         code: 'S001',
+    //         message: 'success',
+    //         userMessage: 'sucesso',
+    //         data: null,
+    //         status: 201
+    //     );
+    // }
 }
