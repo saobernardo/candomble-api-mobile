@@ -1,6 +1,7 @@
 <?php
 
 use App\Providers\AppServiceProvider;
+use App\Providers\HorizonServiceProvider;
 use App\Providers\ResponseServiceProvider;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\AuthServiceProvider;
@@ -161,6 +162,7 @@ return [
         FilesystemServiceProvider::class,
         FoundationServiceProvider::class,
         HashServiceProvider::class,
+        HorizonServiceProvider::class,
         MailServiceProvider::class,
         NotificationServiceProvider::class,
         PaginationServiceProvider::class,

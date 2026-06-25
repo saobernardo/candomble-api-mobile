@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Str;
-
 return [
 
     /*
@@ -15,7 +13,11 @@ return [
     |
     */
 
-    'default' => env('CACHE_STORE', 'redis'),
+    'default' => env('CACHE_DRIVER', 'file'),
+
+    'defaultSecondsToLive' => env('APP_ENV', 'production') === 'production'
+        ? (24 * 60 * 60)
+        : env('CACHE_DEFAULT_TTL', (15 * 60)),
 
     /*
     |--------------------------------------------------------------------------
@@ -73,7 +75,7 @@ return [
 
         'redis' => [
             'driver' => 'redis',
-            'connection' => env('REDIS_CACHE_CONNECTION', 'cache'),
+            'connection' => env('CACHE_CONNECTION', 'default'),
             'lock_connection' => env('REDIS_CACHE_LOCK_CONNECTION', 'default'),
         ],
 
@@ -103,6 +105,8 @@ return [
     |
     */
 
-    'prefix' => env('CACHE_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')) . '-cache-'),
+    'prefix' => env('CACHE_PREFIX', 'cache:'),
+
+    'limiter' => env('RATE_LIMITER', 'redis'),
 
 ];
