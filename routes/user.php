@@ -8,4 +8,7 @@ Route::group([
 ], function () {
     Route::post('create', [UserController::class, 'create']);
     Route::post('login', [UserController::class, 'login']);
+    Route::post('password-recovery-request', [UserController::class, 'passwordRecoveryRequest']);
+    // Route::get('validatePasswordRecovery/{token}/{encodedEmail}', [AuthController::class, 'validatePasswordRecovery']);
+    // Route::put('passwordChange', [AuthController::class, 'passwordChange']);
 });

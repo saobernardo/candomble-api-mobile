@@ -2,9 +2,8 @@
 
 namespace App\Services\User;
 
-use App\Events\PasswordRecoveryRequestedEvent;
 use App\Exceptions\ClientException;
-use App\Exceptions\NotFoundException;
+use App\Services\Email\PasswordRecoveryEmailService;
 use App\Services\GenerateLinksService;
 use App\Services\GenerateTokensService;
 use Illuminate\Support\Facades\Log;
@@ -31,12 +30,14 @@ class PasswordRecoveryService
      * @param  GenerateTokensService  $generateTokensService
      * @param  GenerateLinksService  $generateLinksService
      * @param  SavePasswordResetTokenService  $savePasswordResetTokenService
+     * @param  PasswordRecoveryEmailService  $passwordRecoveryEmailService
      */
     public function __construct(
         protected GetUserService $getUserService,
         protected GenerateTokensService $generateTokensService,
         protected GenerateLinksService $generateLinksService,
-        protected SavePasswordResetTokenService $savePasswordResetTokenService
+        protected SavePasswordResetTokenService $savePasswordResetTokenService,
+        protected PasswordRecoveryEmailService $passwordRecoveryEmailService
     ) {}
 
     /**
@@ -53,9 +54,8 @@ class PasswordRecoveryService
     {
         $configMail = config('mail.from');
 
-        try {
-            $user = $this->getUserService->getByEmail($email);
-        } catch (NotFoundException) {
+        $user = $this->getUserService->getByEmail($email);
+        if (!$user) {
             Log::info('[User - PasswordRecoveryService] user not found', [
                 'email' => $email,
             ]);
@@ -77,6 +77,11 @@ class PasswordRecoveryService
             return;
         }
 
-        event(new PasswordRecoveryRequestedEvent($email, $configMail['address'], $passwordRecoveryLink, $user));
+        $this->passwordRecoveryEmailService->send(
+            $email,
+            $configMail['address'],
+            $passwordRecoveryLink,
+            $user
+        );
     }
 }
