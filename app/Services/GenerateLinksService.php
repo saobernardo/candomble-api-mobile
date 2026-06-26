@@ -29,7 +29,7 @@ class GenerateLinksService
         $url = $appConfiguration['url'];
         $emailBase64 = rtrim(strtr(base64_encode($email), '+/', '-_'));
 
-        $url = $url . "/{$prefix}/validatePasswordRecovery/{$token}/{$emailBase64}";
+        $url = $url . "/{$prefix}/validate-password-recovery/{$token}/{$emailBase64}";
 
         return $url;
     }

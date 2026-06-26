@@ -65,7 +65,7 @@ class PasswordRecoveryService
 
         $token = $this->generateTokensService->generateUserPasswordResetRequestToken();
 
-        $passwordRecoveryLink = $this->generateLinksService->generateRecoveryLink($email, $token, 'user');
+        $passwordRecoveryLink = $this->generateLinksService->generateRecoveryLink($email, $token, 'user/auth');
 
         try {
             $this->savePasswordResetTokenService->save($user->id, $email, $token);

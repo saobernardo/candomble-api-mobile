@@ -9,6 +9,6 @@ Route::group([
     Route::post('create', [UserController::class, 'create']);
     Route::post('login', [UserController::class, 'login']);
     Route::post('password-recovery-request', [UserController::class, 'passwordRecoveryRequest']);
-    // Route::get('validatePasswordRecovery/{token}/{encodedEmail}', [AuthController::class, 'validatePasswordRecovery']);
+    Route::get('validate-password-recovery/{token}/{encodedEmail}', [UserController::class, 'validatePasswordRecovery']);
     // Route::put('passwordChange', [AuthController::class, 'passwordChange']);
 });

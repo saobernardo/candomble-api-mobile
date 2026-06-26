@@ -10,6 +10,7 @@ use App\Http\Requests\User\PasswordRecoveryRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\ValidatePasswordRecoveryResource;
 use App\Services\User\CreateUserService;
+use App\Services\User\GetPasswordResetRequestService;
 use App\Services\User\LoginService;
 use App\Services\User\PasswordRecoveryService;
 use Illuminate\Http\JsonResponse;
@@ -23,11 +24,13 @@ class UserController
      * @param  CreateUserService  $createUserService
      * @param  LoginService  $loginService
      * @param  PasswordRecoveryService  $passwordRecoveryService
+     * @param  GetPasswordResetRequestService  $getPasswordResetRequestService
      */
     public function __construct(
         protected CreateUserService $createUserService,
         protected LoginService $loginService,
-        protected PasswordRecoveryService $passwordRecoveryService
+        protected PasswordRecoveryService $passwordRecoveryService,
+        protected GetPasswordResetRequestService $getPasswordResetRequestService
     ) {}
 
     /**
@@ -160,17 +163,17 @@ class UserController
      *
      * @return JsonResponse JSON response with relevant data.
      */
-    // public function validatePasswordRecovery(Request $request, string $token, string $encodedEmail): JsonResponse
-    // {
-    //     $resetRequest = $this->getPasswordResetRequestService->get($encodedEmail, $token);
+    public function validatePasswordRecovery(Request $request, string $token, string $encodedEmail): JsonResponse
+    {
+        $resetRequest = $this->getPasswordResetRequestService->get($encodedEmail, $token);
 
-    //     return response()->json()->default(
-    //         code: 'S001',
-    //         message: 'success',
-    //         userMessage: 'sucesso',
-    //         data: new ValidatePasswordRecoveryResource($resetRequest),
-    //     );
-    // }
+        return response()->json()->default(
+            code: 'S001',
+            message: 'success',
+            userMessage: 'sucesso',
+            data: new ValidatePasswordRecoveryResource($resetRequest),
+        );
+    }
 
     /**
      * Password Change
