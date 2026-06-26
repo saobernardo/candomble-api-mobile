@@ -33,7 +33,7 @@ class GetPasswordResetRequestService
                 ->whereBetween('created_at', [Carbon::now()->subHour(), Carbon::now()])
                 ->firstOrFail();
         } catch (ModelNotFoundException) {
-            throw new NotFoundException('C019', 'password recovery request not found', 'requisição de recuperação de senha não encontrado');
+            throw new NotFoundException('C013', 'password recovery request not found', 'requisição de recuperação de senha não encontrado');
         }
     }
 
@@ -51,7 +51,7 @@ class GetPasswordResetRequestService
         try {
             return UserPasswordResetToken::findOrFail($id);
         } catch (ModelNotFoundException) {
-            throw new NotFoundException('C019', 'password recovery request not found', 'requisição de recuperação de senha não encontrado');
+            throw new NotFoundException('C013', 'password recovery request not found', 'requisição de recuperação de senha não encontrado');
         }
     }
 }
