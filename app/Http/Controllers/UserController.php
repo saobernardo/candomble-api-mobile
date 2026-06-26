@@ -12,6 +12,7 @@ use App\Http\Resources\ValidatePasswordRecoveryResource;
 use App\Services\User\CreateUserService;
 use App\Services\User\GetPasswordResetRequestService;
 use App\Services\User\LoginService;
+use App\Services\User\PasswordChangeService;
 use App\Services\User\PasswordRecoveryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,12 +26,14 @@ class UserController
      * @param  LoginService  $loginService
      * @param  PasswordRecoveryService  $passwordRecoveryService
      * @param  GetPasswordResetRequestService  $getPasswordResetRequestService
+     * @param  PasswordChangeService  $passwordChangeService
      */
     public function __construct(
         protected CreateUserService $createUserService,
         protected LoginService $loginService,
         protected PasswordRecoveryService $passwordRecoveryService,
-        protected GetPasswordResetRequestService $getPasswordResetRequestService
+        protected GetPasswordResetRequestService $getPasswordResetRequestService,
+        protected PasswordChangeService $passwordChangeService
     ) {}
 
     /**
@@ -194,20 +197,20 @@ class UserController
      *
      * @return JsonResponse JSON response with relevant data.
      */
-    // public function passwordChange(PasswordChangeRequest $request): JsonResponse
-    // {
-    //     $this->passwordChangeService->change(
-    //         $request->validated('id'),
-    //         $request->validated('userId'),
-    //         $request->validated('newPassword')
-    //     );
+    public function passwordChange(PasswordChangeRequest $request): JsonResponse
+    {
+        $this->passwordChangeService->change(
+            $request->validated('id'),
+            $request->validated('userId'),
+            $request->validated('newPassword')
+        );
 
-    //     return response()->json()->default(
-    //         code: 'S001',
-    //         message: 'success',
-    //         userMessage: 'sucesso',
-    //         data: null,
-    //         status: 201
-    //     );
-    // }
+        return response()->json()->default(
+            code: 'S001',
+            message: 'success',
+            userMessage: 'sucesso',
+            data: null,
+            status: 201
+        );
+    }
 }
