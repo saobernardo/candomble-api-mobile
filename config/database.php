@@ -148,8 +148,8 @@ return [
         'client' => env('REDIS_CLIENT', 'phpredis'),
         'default' => [
             'host' => env('REDIS_HOST', '127.0.0.1'),
-            'port' => (int) env('REDIS_PORT', '6379'),
-            'database' => (int) env('REDIS_DB', '0'),
+            'port' => (int) env('REDIS_PORT', 6379),
+            'database' => (int) env('REDIS_DB', 0),
             'username' => env('REDIS_USERNAME', null),
             'password' => env('REDIS_PASSWORD', null),
             'persistent' => true,
