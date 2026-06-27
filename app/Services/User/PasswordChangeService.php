@@ -42,7 +42,6 @@ class PasswordChangeService
     {
         $user = $this->getUserService->getById($userId);
         $hashedPassword = $this->passwordService->hash($newPassword);
-
         $user = $this->updateUserService->updatePassword($user, $hashedPassword);
 
         $this->deletePasswordResetTokenService->delete($passwordRequestId);
