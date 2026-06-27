@@ -19,7 +19,8 @@
         "laravellegends/pt-br-validator": "^12.2.0",
         "guzzlehttp/guzzle": "^7.12",
         "predis/predis": "^2.2",
-        "sendgrid/sendgrid": "^8.1.11"
+        "sendgrid/sendgrid": "^8.1.11",
+        "ext-curl": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
